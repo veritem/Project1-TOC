@@ -60,7 +60,8 @@ class BinPackingAbstractClass(ABC):
         with open(temp_result, "w", newline="") as f:
             w = csv.writer(f)
             w.writerow(
-                ["instance_id", "bin_capacity", "bins_array", "method", "time_taken"]
+                ["instance_id", "bin_capacity", "bins_array", "method", "time_taken",
+                "clauses"]
             )
             w.writerows(run_results)
         print(f"\nResults written to {temp_result}")
@@ -101,7 +102,8 @@ class BinPackingAbstractClass(ABC):
                 bt_time = time.perf_counter() - t0
                 for result in temp_results:
                     results.append(
-                        [inst_id, bin_capacity, result, "BruteForce", bt_time]
+                        [inst_id, bin_capacity, result, "BruteForce", bt_time * 1000,
+                         len(clauses)]
                     )
 
         if SubProblemSelection.brute_force in self.sub_problems:
@@ -117,7 +119,8 @@ class BinPackingAbstractClass(ABC):
                 bt_time = time.perf_counter() - t0
                 for result in temp_results:
                     results.append(
-                        [inst_id, bin_capacity, result, "BackTracking", bt_time]
+                        [inst_id, bin_capacity, result, "BackTracking", bt_time * 1000,
+                         len(clauses)]
                     )
 
         if SubProblemSelection.btracking in self.sub_problems:
@@ -132,7 +135,8 @@ class BinPackingAbstractClass(ABC):
                 temp_results = self.binpacking_simple(bin_capacity, clauses)
                 bt_time = time.perf_counter() - t0
                 for result in temp_results:
-                    results.append([inst_id, bin_capacity, result, "Simple", bt_time])
+                    results.append([inst_id, bin_capacity, result, "Simple", bt_time *
+                                    1000,len(clauses)])
 
         if SubProblemSelection.simple in self.sub_problems:
             self.save_results(results, SubProblemSelection.simple.name)
@@ -146,7 +150,8 @@ class BinPackingAbstractClass(ABC):
                 temp_results = self.binpacking_bestcase(bin_capacity, clauses)
                 bt_time = time.perf_counter() - t0
                 for result in temp_results:
-                    results.append([inst_id, bin_capacity, result, "BestCase", bt_time])
+                    results.append([inst_id, bin_capacity, result, "BestCase", bt_time *
+                                    1000, len(clauses)])
 
         if SubProblemSelection.best_case in self.sub_problems:
             self.save_results(results, SubProblemSelection.best_case.name)
